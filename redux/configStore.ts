@@ -4,8 +4,6 @@ import { createWrapper } from 'next-redux-wrapper';
 import { configureStore, combineReducers, getDefaultMiddleware, EnhancedStore, AnyAction } from '@reduxjs/toolkit';
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, persistStore } from 'redux-persist';
 
-import { namespace as AddressNamespace } from './address/slice';
-import { namespace as ConnectionNamespace } from './connection/slice';
 import rootReducer from 'redux/rootReducer';
 import rootSaga from 'redux/rootSaga';
 import { Dispatch } from 'react';
@@ -15,7 +13,7 @@ export let storeGlobal: EnhancedStore | undefined;
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: [AddressNamespace, ConnectionNamespace],
+  whitelist: [],
   blacklist: [],
   timeout: null as any,
 };
