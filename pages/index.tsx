@@ -26,7 +26,7 @@ function Home() {
 
   const [categoryPayment, setCategoryPayment] = useState(car_payment);
 
-  const getListCar = async () => {
+  const setListCategory = async (listCar: any) => {
     const model = uniq(listCar.map((item: CarModel) => item.model));
     const type = uniq(listCar.map((item: CarModel) => item.type));
     const payment = uniq(listCar.map((item: CarModel) => item.payment));
@@ -55,8 +55,8 @@ function Home() {
   };
 
   useEffect(() => {
-    getListCar();
-  }, []);
+    setListCategory(listCar);
+  }, [listCar]);
 
   return (
     <div className="home">
