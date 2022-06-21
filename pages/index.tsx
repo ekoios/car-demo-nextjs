@@ -5,13 +5,15 @@ import { useEffect, useState } from 'react';
 import { getAllCars } from 'services/car';
 import CardType from '@components//CarType';
 import { uniq } from 'utils';
+import { ALL_CAR } from 'constants/car';
+import Car from '@components//Car';
 
 function Home() {
   const [data, setData] = useState([]);
   const [filterParams, setFilterParams] = useState({
-    model: -1,
-    type: -1,
-    payment: -1,
+    model: ALL_CAR,
+    type: ALL_CAR,
+    payment: ALL_CAR,
   }) as any;
 
   const [categories, setCategories] = useState({
@@ -68,20 +70,11 @@ function Home() {
   }, []);
 
   const renderData = (data: any, filterParams: any) => {
-    const newFilterParams = {} as any;
-
-    for (const key in filterParams) {
-      if (filterParams[key] !== -1) {
-        newFilterParams[key] = filterParams[key];
-      }
-    }
-    console.log(data, newFilterParams);
-
     const newData = data.filter((item: any) => {
       return (
-        (filterParams.model !== -1 ? item.model === filterParams.model : true) &&
-        (filterParams.type !== -1 ? item.type === filterParams.type : true) &&
-        (filterParams.payment !== -1 ? item.payment === filterParams.payment : true)
+        (filterParams.model !== ALL_CAR ? item.model === filterParams.model : true) &&
+        (filterParams.type !== ALL_CAR ? item.type === filterParams.type : true) &&
+        (filterParams.payment !== ALL_CAR ? item.payment === filterParams.payment : true)
       );
     });
 
@@ -94,15 +87,10 @@ function Home() {
       {Object.values(categories).map((category) => (
         <CardType {...category} key={category.key} name={category.key} onChange={onFilterCar} />
       ))}
-      <h2 className="title">List Cars</h2>
+      <h2 className="title">Results</h2>
       <div className="list-car">
         {renderData(data, filterParams).map((item: any, index: number) => (
-          <div key={index} className="car">
-            <h4>{item.name}</h4>
-            <div>{item.type}</div>
-            <div>{item.model}</div>
-            <div>{item.payment}</div>
-          </div>
+          <Car key={index} {...item} />
         ))}
       </div>
     </div>
