@@ -19,6 +19,8 @@ const CardType: FC<CardTypeProps> = ({ label, options, name, value, onChange }) 
     onChange(name, value);
   };
 
+  console.log(options);
+
   return (
     <div className="card-type">
       <div className="card-type__name">{label}</div>
