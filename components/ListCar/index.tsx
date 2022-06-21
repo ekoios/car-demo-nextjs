@@ -1,19 +1,19 @@
 import { FC } from 'react';
-import { ALL_CAR } from 'constants/car';
+import { ALL_CAR, CarModel } from 'constants/car';
 
 interface ListCar {
   title: string;
   filterParams: any;
-  listCar: any;
+  listCar: CarModel[];
 }
 
 const ListCar: FC<ListCar> = ({ title, filterParams, listCar }) => {
-  const renderData = (data: any, filterParams: any) => {
+  const renderData = (data: CarModel[], filterParams: any) => {
     if (!data) {
       return [];
     }
 
-    const newData = data.filter((item: any) => {
+    const newData = data.filter((item: CarModel) => {
       return (
         (ALL_CAR !== filterParams.model ? filterParams.model === item?.model : true) &&
         (ALL_CAR !== filterParams.type ? filterParams.type === item?.type : true) &&
@@ -28,7 +28,7 @@ const ListCar: FC<ListCar> = ({ title, filterParams, listCar }) => {
     <>
       <h2 className="title">{title}</h2>
       <div className="list-car">
-        {renderData(listCar, filterParams).map((item: any, index: number) => (
+        {renderData(listCar, filterParams).map((item: CarModel, index: number) => (
           <div className="car" key={index}>
             <h4>{item.name}</h4>
             <div>{item.type}</div>

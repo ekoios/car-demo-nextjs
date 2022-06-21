@@ -4,35 +4,27 @@ import { GetServerSideProps } from 'next';
 import withServerSideProps from 'hoc/withServerSideProps';
 import { getAllCars } from 'services/car';
 import { uniq } from 'utils';
-import { ALL_CAR } from 'constants/car';
+import { ALL_CAR, CarModel, car_model, car_payment, car_type } from 'constants/car';
 import CardType from '@components//CarType';
 import Car from '@components//ListCar';
 
 function Home() {
   const [listCar, setListCar] = useState([]);
-  const [filterParams, setFilterParams] = useState({
+  const [filterParams, setFilterParams] = useState<{
+    model: string | number;
+    type: string | number;
+    payment: string | number;
+  }>({
     model: ALL_CAR,
     type: ALL_CAR,
     payment: ALL_CAR,
-  }) as any;
-
-  const [categoryModel, setCategoryModel] = useState({
-    key: 'model',
-    label: 'Model',
-    options: [],
   });
 
-  const [categoryType, setCategoryType] = useState({
-    key: 'type',
-    label: 'Type',
-    options: [],
-  });
+  const [categoryModel, setCategoryModel] = useState(car_model);
 
-  const [categoryPayment, setCategoryPayment] = useState({
-    key: 'payment',
-    label: 'Payment',
-    options: [],
-  });
+  const [categoryType, setCategoryType] = useState(car_type);
+
+  const [categoryPayment, setCategoryPayment] = useState(car_payment);
 
   const getListCar = async () => {
     let listCar;
@@ -45,9 +37,9 @@ function Home() {
       console.error(error);
     }
 
-    const model = uniq(listCar.map((item: any) => item.model));
-    const type = uniq(listCar.map((item: any) => item.type));
-    const payment = uniq(listCar.map((item: any) => item.payment));
+    const model = uniq(listCar.map((item: CarModel) => item.model));
+    const type = uniq(listCar.map((item: CarModel) => item.type));
+    const payment = uniq(listCar.map((item: CarModel) => item.payment));
 
     setCategoryModel((prevState) => ({
       ...prevState,
