@@ -2,17 +2,17 @@ import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 
 import withServerSideProps from 'hoc/withServerSideProps';
-import { getAllCars } from 'services/car';
 import { uniq } from 'utils';
 import { ALL_CAR, CarModel, car_model, car_payment, car_type } from 'constants/car';
 import CardType from '@components//CarType';
 import Car from '@components//ListCar';
+import { useCar } from 'hooks/useCar';
 
 function Home() {
-  const [listCar, setListCar] = useState([]);
+  const { listCar } = useCar() as any;
   const [filterParams, setFilterParams] = useState<{
-    model: string | number;
     type: string | number;
+    model: string | number;
     payment: string | number;
   }>({
     model: ALL_CAR,
@@ -27,16 +27,6 @@ function Home() {
   const [categoryPayment, setCategoryPayment] = useState(car_payment);
 
   const getListCar = async () => {
-    let listCar;
-
-    try {
-      listCar = (await getAllCars()) as any;
-      setListCar(listCar);
-    } catch (error) {
-      // Handle Error
-      console.error(error);
-    }
-
     const model = uniq(listCar.map((item: CarModel) => item.model));
     const type = uniq(listCar.map((item: CarModel) => item.type));
     const payment = uniq(listCar.map((item: CarModel) => item.payment));
