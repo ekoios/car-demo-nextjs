@@ -1,60 +1,67 @@
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 
 import withServerSideProps from 'hoc/withServerSideProps';
-import { useEffect, useState } from 'react';
 import { getAllCars } from 'services/car';
-import CardType from '@components//CarType';
 import { uniq } from 'utils';
 import { ALL_CAR } from 'constants/car';
-import Car from '@components//Car';
+import CardType from '@components//CarType';
+import Car from '@components//ListCar';
 
 function Home() {
-  const [data, setData] = useState([]);
+  const [listCar, setListCar] = useState([]);
   const [filterParams, setFilterParams] = useState({
     model: ALL_CAR,
     type: ALL_CAR,
     payment: ALL_CAR,
   }) as any;
 
-  const [categories, setCategories] = useState({
-    model: {
-      key: 'model',
-      label: 'Model',
-      options: [],
-    },
-    type: {
-      key: 'type',
-      label: 'Type',
-      options: [],
-    },
-    payment: {
-      key: 'payment',
-      label: 'Payment',
-      options: [],
-    },
+  const [categoryModel, setCategoryModel] = useState({
+    key: 'model',
+    label: 'Model',
+    options: [],
   });
 
-  const getData = async () => {
-    const data = (await getAllCars()) as any;
-    setData(data);
+  const [categoryType, setCategoryType] = useState({
+    key: 'type',
+    label: 'Type',
+    options: [],
+  });
 
-    const model = uniq(data.map((item: any) => item.model));
-    const type = uniq(data.map((item: any) => item.type));
-    const payment = uniq(data.map((item: any) => item.payment));
+  const [categoryPayment, setCategoryPayment] = useState({
+    key: 'payment',
+    label: 'Payment',
+    options: [],
+  });
 
-    setCategories((prevState) => ({
-      model: {
-        ...prevState.model,
-        options: model,
-      },
-      type: {
-        ...prevState.type,
-        options: type,
-      },
-      payment: {
-        ...prevState.payment,
-        options: payment,
-      },
+  const getListCar = async () => {
+    let listCar;
+
+    try {
+      listCar = (await getAllCars()) as any;
+      setListCar(listCar);
+    } catch (error) {
+      // Handle Error
+      console.error(error);
+    }
+
+    const model = uniq(listCar.map((item: any) => item.model));
+    const type = uniq(listCar.map((item: any) => item.type));
+    const payment = uniq(listCar.map((item: any) => item.payment));
+
+    setCategoryModel((prevState) => ({
+      ...prevState,
+      options: model,
+    }));
+
+    setCategoryType((prevState) => ({
+      ...prevState,
+      options: type,
+    }));
+
+    setCategoryPayment((prevState) => ({
+      ...prevState,
+      options: payment,
     }));
   };
 
@@ -66,33 +73,16 @@ function Home() {
   };
 
   useEffect(() => {
-    getData();
+    getListCar();
   }, []);
-
-  const renderData = (data: any, filterParams: any) => {
-    const newData = data.filter((item: any) => {
-      return (
-        (filterParams.model !== ALL_CAR ? item.model === filterParams.model : true) &&
-        (filterParams.type !== ALL_CAR ? item.type === filterParams.type : true) &&
-        (filterParams.payment !== ALL_CAR ? item.payment === filterParams.payment : true)
-      );
-    });
-
-    return newData;
-  };
 
   return (
     <div className="home">
       <h1>Cars</h1>
-      {Object.values(categories).map((category) => (
+      {[categoryModel, categoryType, categoryPayment].map((category) => (
         <CardType {...category} key={category.key} name={category.key} onChange={onFilterCar} />
       ))}
-      <h2 className="title">Results</h2>
-      <div className="list-car">
-        {renderData(data, filterParams).map((item: any, index: number) => (
-          <Car key={index} {...item} />
-        ))}
-      </div>
+      <Car title="Results" listCar={listCar} filterParams={filterParams} />
     </div>
   );
 }

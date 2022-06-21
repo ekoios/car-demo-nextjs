@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { string } from 'yup';
 
 interface CardTypeProps {
   label: string;

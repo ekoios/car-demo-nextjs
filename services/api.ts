@@ -11,7 +11,7 @@ const typeOfMessage = TYPE_CONSTANTS.MESSAGE;
 const HEADERS = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_ALLOW_ORIGIN,
   'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
 } as any;
 
@@ -30,8 +30,7 @@ const getFullUrl = (url: string) => {
   if (!url.startsWith('/')) {
     url = '/' + url;
   }
-  console.log(`${process.env.NEXT_PUBLIC_API}` + url);
-  return `${process.env.NEXT_PUBLIC_API}` + url;
+  return `${process.env.NEXT_PUBLIC_API}${url}`;
 };
 
 const resetToLogin = () => {
