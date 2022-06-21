@@ -9,6 +9,10 @@ interface ListCar {
 
 const ListCar: FC<ListCar> = ({ title, filterParams, listCar }) => {
   const renderData = (data: any, filterParams: any) => {
+    if (!data) {
+      return [];
+    }
+
     const newData = data.filter((item: any) => {
       return (
         (ALL_CAR !== filterParams.model ? filterParams.model === item?.model : true) &&
@@ -32,6 +36,7 @@ const ListCar: FC<ListCar> = ({ title, filterParams, listCar }) => {
             <div>{item.payment}</div>
           </div>
         ))}
+        {!renderData(listCar, filterParams).length && <div>Not found</div>}
       </div>
     </>
   );
